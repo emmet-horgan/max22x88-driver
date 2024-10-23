@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/setup-pages
   workflow_dispatch:
 
 jobs:
@@ -12,9 +13,15 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: DenverCoder1/doxygen-github-pages-action@v2.0.0
+
+      - name: Checkout
+        uses: actions/checkout@v4
+  
+      - uses: mattnotmitt/doxygen-action@v1.9
+        with:
+          working-directory: ./doc
+
+      - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
-          folder: doc/html
-          config_file: doc/Doxyfile
+          publish_dir: ./doc/output/html
